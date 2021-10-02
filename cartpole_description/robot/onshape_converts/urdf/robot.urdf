@@ -1,0 +1,153 @@
+<robot name="cartpole_robot">
+<link name="rail">
+<visual>
+<origin xyz="0.498292 0.0949833 0.468696" rpy="0 -0 -2.77556e-16" />
+<geometry>
+<mesh filename="package://rail.stl"/>
+</geometry>
+<material name="rail_material">
+<color rgba="0.615686 0.811765 0.929412 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.498292 0.0949833 0.468696" rpy="0 -0 -2.77556e-16" />
+<geometry>
+<mesh filename="package://rail.stl"/>
+</geometry>
+<material name="rail_material">
+<color rgba="0.615686 0.811765 0.929412 1.0"/>
+</material>
+</collision>
+<visual>
+<origin xyz="1.09729 0.0949833 0.248696" rpy="0 -0 3.14159" />
+<geometry>
+<mesh filename="package://stand.stl"/>
+</geometry>
+<material name="stand_material">
+<color rgba="0.815686 0.054902 0.0431373 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="1.09729 0.0949833 0.248696" rpy="0 -0 3.14159" />
+<geometry>
+<mesh filename="package://stand.stl"/>
+</geometry>
+<material name="stand_material">
+<color rgba="0.815686 0.054902 0.0431373 1.0"/>
+</material>
+</collision>
+<visual>
+<origin xyz="-0.100708 0.0949833 0.248696" rpy="0 -0 -2.77556e-16" />
+<geometry>
+<mesh filename="package://stand.stl"/>
+</geometry>
+<material name="stand_material">
+<color rgba="0.815686 0.054902 0.0431373 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.100708 0.0949833 0.248696" rpy="0 -0 -2.77556e-16" />
+<geometry>
+<mesh filename="package://stand.stl"/>
+</geometry>
+<material name="stand_material">
+<color rgba="0.815686 0.054902 0.0431373 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="0.498292 0.0949833 0.24872" rpy="0 0 0"/>
+<mass value="227.005" />
+<inertia ixx="5.48654" ixy="2.43677e-14"  ixz="3.80451e-14" iyy="73.3331" iyz="-1.40516e-29" izz="69.3598" />
+</inertial>
+</link>
+
+<link name="cart">
+<visual>
+<origin xyz="1.38778e-17 0.00289099 0" rpy="1.5708 1.5708 0" />
+<geometry>
+<mesh filename="package://cart.stl"/>
+</geometry>
+<material name="cart_material">
+<color rgba="0.937255 0.988235 1 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="1.38778e-17 0.00289099 0" rpy="1.5708 1.5708 0" />
+<geometry>
+<mesh filename="package://cart.stl"/>
+</geometry>
+<material name="cart_material">
+<color rgba="0.937255 0.988235 1 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-0.000195348 -0.00963307 -6.59027e-18" rpy="0 0 0"/>
+<mass value="0.984703" />
+<inertia ixx="0.00102643" ixy="-2.12268e-19"  ixz="-4.62921e-09" iyy="0.000261653" iyz="1.28486e-24" izz="0.000866578" />
+</inertial>
+</link>
+
+<link name="pole">
+<visual>
+<origin xyz="-5.55112e-17 0.22 0.01" rpy="-1.5708 -0 3.14159" />
+<geometry>
+<mesh filename="package://weight.stl"/>
+</geometry>
+<material name="weight_material">
+<color rgba="0.470588 0.47451 0.47451 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-5.55112e-17 0.22 0.01" rpy="-1.5708 -0 3.14159" />
+<geometry>
+<mesh filename="package://weight.stl"/>
+</geometry>
+<material name="weight_material">
+<color rgba="0.470588 0.47451 0.47451 1.0"/>
+</material>
+</collision>
+<visual>
+<origin xyz="-0.006 -5.55112e-17 -0.009" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://pole.stl"/>
+</geometry>
+<material name="pole_material">
+<color rgba="0.615686 0.811765 0.929412 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.006 -5.55112e-17 -0.009" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://pole.stl"/>
+</geometry>
+<material name="pole_material">
+<color rgba="0.615686 0.811765 0.929412 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-3.05149e-08 0.17884 0.00510511" rpy="0 0 0"/>
+<mass value="0.0254927" />
+<inertia ixx="0.00012505" ixy="-4.23125e-11"  ixz="-1.14308e-11" iyy="2.81731e-06" iyz="-1.23487e-05" izz="0.000123402" />
+</inertial>
+</link>
+
+<joint name="revolute_pole" type="revolute">
+<origin xyz="-0.04 -0.00960901 0" rpy="-0 -1.5708 0" />
+<parent link="cart" />
+<child link="pole" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="slider_cart" type="prismatic">
+<origin xyz="0.498292 0.0949833 0.468696" rpy="-1.5708 -0 1.5708" />
+<parent link="rail" />
+<child link="cart" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" lower="-0.42" upper="0.42"/>
+<joint_properties friction="0.0"/>
+</joint>
+
+
+</robot>

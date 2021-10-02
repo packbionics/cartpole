@@ -1,0 +1,111 @@
+<sdf version="1.6">
+<model name="cartpole_robot">
+<link name="rail">
+    <frame name="rail_frame"><pose>0 0 0 0 -0 0</pose></frame>
+    <visual name="rail_0_rail_visual">
+    <pose>0.498292 0.0949833 0.468696 0 -0 -2.77556e-16</pose>
+    <geometry>
+    <mesh><uri>model://cartpole/meshes/rail.stl</uri></mesh>
+    </geometry>
+    <material><ambient>0.615686 0.811765 0.929412 1</ambient><diffuse>0.615686 0.811765 0.929412 1</diffuse><specular>0.1 0.1 0.1 1</specular><emissive>0 0 0 0</emissive></material>
+    </visual>
+    <collision name="rail_0_rail_visual">
+    <pose>0.498292 0.0949833 0.468696 0 -0 -2.77556e-16</pose>
+    <geometry>
+    <mesh><uri>model://cartpole/meshes/rail.stl</uri></mesh>
+    </geometry>
+    </collision>
+    <visual name="rail_1_stand_visual">
+    <pose>1.09729 0.0949833 0.248696 0 -0 3.14159</pose>
+    <geometry>
+    <mesh><uri>model://cartpole/meshes/stand.stl</uri></mesh>
+    </geometry>
+    <material><ambient>0.815686 0.054902 0.0431373 1</ambient><diffuse>0.815686 0.054902 0.0431373 1</diffuse><specular>0.1 0.1 0.1 1</specular><emissive>0 0 0 0</emissive></material>
+    </visual>
+    <collision name="rail_1_stand_visual">
+    <pose>1.09729 0.0949833 0.248696 0 -0 3.14159</pose>
+    <geometry>
+    <mesh><uri>model://cartpole/meshes/stand.stl</uri></mesh>
+    </geometry>
+    </collision>
+    <visual name="rail_2_stand_visual">
+    <pose>-0.100708 0.0949833 0.248696 0 -0 -2.77556e-16</pose>
+    <geometry>
+    <mesh><uri>model://cartpole/meshes/stand.stl</uri></mesh>
+    </geometry>
+    <material><ambient>0.815686 0.054902 0.0431373 1</ambient><diffuse>0.815686 0.054902 0.0431373 1</diffuse><specular>0.1 0.1 0.1 1</specular><emissive>0 0 0 0</emissive></material>
+    </visual>
+    <collision name="rail_2_stand_visual">
+    <pose>-0.100708 0.0949833 0.248696 0 -0 -2.77556e-16</pose>
+    <geometry>
+    <mesh><uri>model://cartpole/meshes/stand.stl</uri></mesh>
+    </geometry>
+    </collision>
+    <inertial>
+    <pose frame="rail_frame">0.498292 0.0949833 0.24872 0 0 0</pose>
+    <mass>227.005</mass>
+    <inertia><ixx>5.48654</ixx><ixy>2.43677e-14</ixy><ixz>3.80451e-14</ixz><iyy>73.3331</iyy><iyz>-1.40516e-29</iyz><izz>69.3598</izz></inertia>
+    </inertial>
+</link>
+
+<link name="cart">
+    <pose>0.498292 0.0949833 0.465805 0 -0 0</pose>
+
+    <visual name="cart_0_cart_visual">
+        <geometry>
+        <mesh><uri>model://cartpole/meshes/cart.stl</uri></mesh>
+        </geometry>
+        <material><ambient>0.937255 0.988235 1 1</ambient><diffuse>0.937255 0.988235 1 1</diffuse><specular>0.1 0.1 0.1 1</specular><emissive>0 0 0 0</emissive></material>
+    </visual>
+    <inertial>
+        <mass>0.984703</mass>
+        <inertia><ixx>0.000261653</ixx><ixy>0</ixy><ixz>0</ixz><iyy>0.000866578</iyy><iyz>-4.62921e-09</iyz><izz>0.00102643</izz></inertia>
+    </inertial>
+</link>
+
+<link name="pole">
+    <pose>0.498292 0.0449833 0.258305 0 -0 0</pose>
+
+    <visual name="pole_0_weight_visual">
+        <geometry>
+        <mesh><uri>model://cartpole/meshes/weight.stl</uri></mesh>
+        </geometry>
+        <material><ambient>0.470588 0.47451 0.47451 1</ambient><diffuse>0.470588 0.47451 0.47451 1</diffuse><specular>0.1 0.1 0.1 1</specular><emissive>0 0 0 0</emissive></material>
+    </visual>
+    <visual name="pole_1_pole_visual">
+        <pose>0.006 0.019 0.22 3.14159 -0 3.14159</pose>
+        <geometry>
+        <mesh><uri>model://cartpole/meshes/pole.stl</uri></mesh>
+        </geometry>
+        <material><ambient>0.615686 0.811765 0.929412 1</ambient><diffuse>0.615686 0.811765 0.929412 1</diffuse><specular>0.1 0.1 0.1 1</specular><emissive>0 0 0 0</emissive></material>
+    </visual>
+    <inertial>
+        <pose>0 0.0048949 0.04116 0 0 0</pose>
+        <mass>0.0254927</mass>
+        <inertia><ixx>0.00012505</ixx><ixy>-4.94907e-12</ixy><ixz>-4.88588e-11</ixz><iyy>0.000123402</iyy><iyz>-1.23487e-05</iyz><izz>2.81731e-06</izz></inertia>
+    </inertial>
+</link>
+
+<joint name="revolute_pole" type="revolute">
+    <pose>0 0 0.22 -1.5708 -0 3.14159</pose>
+    <parent>cart</parent>
+    <child>pole</child>
+    <axis>
+    <xyz>0 0 1</xyz>
+    <limit><effort>1</effort><velocity>20</velocity></limit>
+    </axis>
+</joint>
+
+<joint name="slider_cart" type="prismatic">
+    <pose>0.498292 0.0949833 0.468696 -1.5708 -0 1.5708</pose>
+    <parent>rail</parent>
+    <child>cart</child>
+    <axis>
+    <xyz>0 0 1</xyz>
+    <limit><effort>1</effort><velocity>20</velocity><lower>-0.42</lower><upper>0.42</upper></limit>
+    </axis>
+</joint>
+
+
+</model>
+</sdf>

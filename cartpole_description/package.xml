@@ -3,11 +3,13 @@
 <package format="3">
   <name>cartpole_description</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <description>Cartpole descriptions and simulations</description>
   <maintainer email="59701038+JChunX@users.noreply.github.com">jasonx</maintainer>
-  <license>TODO: License declaration</license>
+  <license>MIT</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>xacro<depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

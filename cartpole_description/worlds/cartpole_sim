@@ -1,0 +1,379 @@
+<sdf version='1.7'>
+  <world name='default'>
+    <light name='sun' type='directional'>
+      <cast_shadows>1</cast_shadows>
+      <pose>0 0 10 0 -0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
+      <spot>
+        <inner_angle>0</inner_angle>
+        <outer_angle>0</outer_angle>
+        <falloff>0</falloff>
+      </spot>
+    </light>
+    <model name='ground_plane'>
+      <static>1</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <surface>
+            <contact>
+              <collide_bitmask>65535</collide_bitmask>
+              <ode/>
+            </contact>
+            <friction>
+              <ode>
+                <mu>100</mu>
+                <mu2>50</mu2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='visual'>
+          <cast_shadows>0</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Grey</name>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <gravity>0 0 -9.8</gravity>
+    <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
+    <atmosphere type='adiabatic'/>
+    <physics type='ode'>
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+    <scene>
+      <ambient>0.4 0.4 0.4 1</ambient>
+      <background>0.7 0.7 0.7 1</background>
+      <shadows>1</shadows>
+    </scene>
+    <wind/>
+    <spherical_coordinates>
+      <surface_model>EARTH_WGS84</surface_model>
+      <latitude_deg>0</latitude_deg>
+      <longitude_deg>0</longitude_deg>
+      <elevation>0</elevation>
+      <heading_deg>0</heading_deg>
+    </spherical_coordinates>
+    <state world_name='default'>
+      <sim_time>1920 920000000</sim_time>
+      <real_time>2095 260694681</real_time>
+      <wall_time>1633153761 191639112</wall_time>
+      <iterations>1920920</iterations>
+      <model name='cartpole_robot'>
+        <pose>0.204547 0.083253 0.001303 -4e-06 8e-06 0.000124</pose>
+        <scale>1 1 1</scale>
+        <link name='cart'>
+          <pose>0.691646 0.178297 0.467104 -3e-06 8e-06 0.000124</pose>
+          <velocity>-0.001145 0.000879 -0.005006 0.000522 0.007928 -0.000669</velocity>
+          <acceleration>-0.000239 1.11484 -7.40263 -2.72972 -0.484891 2.41969</acceleration>
+          <wrench>-0.000235 1.09779 -7.28939 0 -0 0</wrench>
+        </link>
+        <link name='pole'>
+          <pose>0.691657 0.128297 0.259604 -3e-06 -1.9e-05 0.000124</pose>
+          <velocity>-0.001151 0.001197 -0.005035 0.000862 0.000326 -0.000665</velocity>
+          <acceleration>0.003155 1.43977 -7.42164 0.831276 0.052462 -0.72267</acceleration>
+          <wrench>8e-05 0.036704 -0.189198 0 -0 0</wrench>
+        </link>
+        <link name='rail'>
+          <pose>0.204547 0.083253 0.001303 -4e-06 8e-06 0.000124</pose>
+          <velocity>1.4e-05 -7e-05 -0.0008 -0.003631 0.007926 -0.000745</velocity>
+          <acceleration>0.981099 0.549161 -7.4425 -0.875904 -0.48876 2.37681</acceleration>
+          <wrench>222.714 124.662 -1689.49 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='ground_plane'>
+        <pose>0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name='link'>
+          <pose>0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <light name='sun'>
+        <pose>0 0 10 0 -0 0</pose>
+      </light>
+    </state>
+    <model name='cartpole_robot'>
+      <link name='rail'>
+        <visual name='rail_0_rail_visual'>
+          <pose>0.498292 0.094983 0.468696 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://cartpole/meshes/rail.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>0.615686 0.811765 0.929412 1</ambient>
+            <diffuse>0.615686 0.811765 0.929412 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <emissive>0 0 0 0</emissive>
+          </material>
+        </visual>
+        <collision name='rail_0_rail_visual'>
+          <pose>0.498292 0.094983 0.468696 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://cartpole/meshes/rail.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='rail_1_stand_visual'>
+          <pose>1.09729 0.094983 0.248696 0 -0 3.14159</pose>
+          <geometry>
+            <mesh>
+              <uri>model://cartpole/meshes/stand.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>0.815686 0.054902 0.0431373 1</ambient>
+            <diffuse>0.815686 0.054902 0.0431373 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <emissive>0 0 0 0</emissive>
+          </material>
+        </visual>
+        <collision name='rail_1_stand_visual'>
+          <pose>1.09729 0.094983 0.248696 0 -0 3.14159</pose>
+          <geometry>
+            <mesh>
+              <uri>model://cartpole/meshes/stand.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='rail_2_stand_visual'>
+          <pose>-0.100708 0.094983 0.248696 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://cartpole/meshes/stand.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>0.815686 0.054902 0.0431373 1</ambient>
+            <diffuse>0.815686 0.054902 0.0431373 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <emissive>0 0 0 0</emissive>
+          </material>
+        </visual>
+        <collision name='rail_2_stand_visual'>
+          <pose>-0.100708 0.094983 0.248696 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://cartpole/meshes/stand.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <inertial>
+          <pose relative_to='rail_frame'>0.498292 0.094983 0.24872 0 -0 0</pose>
+          <mass>227.005</mass>
+          <inertia>
+            <ixx>5.48654</ixx>
+            <ixy>2.43677e-14</ixy>
+            <ixz>3.80451e-14</ixz>
+            <iyy>73.3331</iyy>
+            <iyz>-1.40516e-29</iyz>
+            <izz>69.3598</izz>
+          </inertia>
+        </inertial>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+        <frame name='rail_frame'>
+          <pose>0 0 0 0 -0 0</pose>
+        </frame>
+      </link>
+      <link name='cart'>
+        <pose>0.498292 0.094983 0.465805 0 -0 0</pose>
+        <visual name='cart_0_cart_visual'>
+          <geometry>
+            <mesh>
+              <uri>model://cartpole/meshes/cart.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>0.937255 0.988235 1 1</ambient>
+            <diffuse>0.937255 0.988235 1 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <emissive>0 0 0 0</emissive>
+          </material>
+        </visual>
+        <inertial>
+          <mass>0.984703</mass>
+          <inertia>
+            <ixx>0.000261653</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.000866578</iyy>
+            <iyz>-4.62921e-09</iyz>
+            <izz>0.00102643</izz>
+          </inertia>
+          <pose>0 0 0 0 -0 0</pose>
+        </inertial>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <link name='pole'>
+        <pose>0.498292 0.044983 0.258305 0 -0 0</pose>
+        <visual name='pole_0_weight_visual'>
+          <geometry>
+            <mesh>
+              <uri>model://cartpole/meshes/weight.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>0.470588 0.47451 0.47451 1</ambient>
+            <diffuse>0.470588 0.47451 0.47451 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <emissive>0 0 0 0</emissive>
+          </material>
+        </visual>
+        <visual name='pole_1_pole_visual'>
+          <pose>0.006 0.019 0.22 3.14159 -0 3.14159</pose>
+          <geometry>
+            <mesh>
+              <uri>model://cartpole/meshes/pole.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>0.615686 0.811765 0.929412 1</ambient>
+            <diffuse>0.615686 0.811765 0.929412 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <emissive>0 0 0 0</emissive>
+          </material>
+        </visual>
+        <inertial>
+          <pose>0 0.004895 0.04116 0 -0 0</pose>
+          <mass>0.0254927</mass>
+          <inertia>
+            <ixx>0.00012505</ixx>
+            <ixy>-4.94907e-12</ixy>
+            <ixz>-4.88588e-11</ixz>
+            <iyy>0.000123402</iyy>
+            <iyz>-1.23487e-05</iyz>
+            <izz>2.81731e-06</izz>
+          </inertia>
+        </inertial>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='revolute_pole' type='revolute'>
+        <pose>0 0 0.22 -1.5708 -0 3.14159</pose>
+        <parent>cart</parent>
+        <child>pole</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <effort>1</effort>
+            <velocity>20</velocity>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <joint name='slider_cart' type='prismatic'>
+        <pose>0.498292 0.094983 0.468696 -1.5708 0 1.5708</pose>
+        <parent>rail</parent>
+        <child>cart</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <effort>1</effort>
+            <velocity>20</velocity>
+            <lower>-0.42</lower>
+            <upper>0.42</upper>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+        </axis>
+      </joint>
+      <pose>0.204523 0.083047 0 0 -0 0</pose>
+    </model>
+    <gui fullscreen='0'>
+      <camera name='user_camera'>
+        <pose>1.54758 -2.49631 1.63301 0 0.445689 1.74535</pose>
+        <view_controller>orbit</view_controller>
+        <projection_type>perspective</projection_type>
+      </camera>
+    </gui>
+  </world>
+</sdf>
