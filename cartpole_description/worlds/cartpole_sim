@@ -144,7 +144,7 @@
             <emissive>0 0 0 0</emissive>
           </material>
         </visual>
-        <collision name='rail_0_rail_visual'>
+        <collision name='rail_0_rail_collision'>
           <pose>0.498292 0.094983 0.468696 0 -0 0</pose>
           <geometry>
             <mesh>
@@ -179,7 +179,7 @@
             <emissive>0 0 0 0</emissive>
           </material>
         </visual>
-        <collision name='rail_1_stand_visual'>
+        <collision name='rail_1_stand_collision'>
           <pose>1.09729 0.094983 0.248696 0 -0 3.14159</pose>
           <geometry>
             <mesh>
@@ -214,7 +214,7 @@
             <emissive>0 0 0 0</emissive>
           </material>
         </visual>
-        <collision name='rail_2_stand_visual'>
+        <collision name='rail_2_stand_collision'>
           <pose>-0.100708 0.094983 0.248696 0 -0 0</pose>
           <geometry>
             <mesh>
