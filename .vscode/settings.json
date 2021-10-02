@@ -1,0 +1,8 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/home/jasonx/dev_ws/install/teleop_twist_keyboard/lib/python3.8/site-packages",
+        "/home/jasonx/dev_ws/install/cartpole_interfaces/lib/python3.8/site-packages",
+        "/home/jasonx/ros2_foxy/ros2-linux/lib/python3.8/site-packages"
+    ],
+    "cmake.configureOnOpen": true
+}
