@@ -20,7 +20,7 @@ def generate_launch_description():
   world_path = os.path.join(pkg_share, 'worlds', world_file_name)
    
   # Set the path to the SDF model files.
-  gazebo_models_path = os.path.join(pkg_share, 'robot')
+  gazebo_models_path = os.path.join(pkg_share, 'robot/gazebo_models')
   os.environ["GAZEBO_MODEL_PATH"] = gazebo_models_path
  
   # Launch configuration variables specific to simulation
