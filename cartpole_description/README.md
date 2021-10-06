@@ -52,7 +52,7 @@ onshape-to-robot config.json
 
 After the conversion, move the files to their respective directories:
 * urdf files goes to `urdf/`
-* stl files goes to `meshes/`. Gazebo models will also need their own copy of stls files in their own `gazebo_models/<model_name>/meshes/` folder
-* copy sdf files into the `gazebo_models/<model_name>` folder
+* stl files goes to `meshes/`. Gazebo models will also need their own copy of stls files in their own `robot/gazebo_models/<model_name>/meshes/` folder
+* copy sdf files into the `robot/gazebo_models/<model_name>` folder
 
 The urdf files should work right away for RViz. But the sdf files require substantial tweaking for it to work in Gazebo. Consult the existing sdf file for guidance. After modifying the sdf file, copy everything in `<model>...</model>` into the world file at `worlds/cartpole_sim.world`
