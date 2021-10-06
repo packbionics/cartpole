@@ -1,5 +1,7 @@
 # cartpole_description
-ROS2 package containing models, simulations and visualizations for the cartpole robot
+ROS2 package containing models, simulations and visualizations for the cartpole robot<br />
+
+<img src="https://user-images.githubusercontent.com/59701038/136147195-ec06f238-6a73-469b-a54e-6566bb9d3a1a.png" width="420">
 
 # Package Organization
 ```
