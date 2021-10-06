@@ -21,9 +21,9 @@ cartpole_description - The package
     |   |
     |   |-onshape_converts - files generated from onshape_to_robot converter
     |   |
-    |   |-urdf - cartpole urdf file for RViz
+    |   |-urdf - cartpole urdf files for RViz
     |
-    |-rviz - RViz configuration file
+    |-rviz - RViz configuration files
     |
     |-worlds - Gazebo simulation worlds
 ```
@@ -44,7 +44,7 @@ After building and sourcing workspace `dev_ws`, Try running some examples:
 
 The cartpole robot designs can be found on Onshape: [link](https://cad.onshape.com/documents/62fb4288b389f749f09c2484/w/3734bab7afe5eddf677d00fd/e/02dadcf645139f052b5a51c4?renderMode=0&uiState=615d305416b0f06691e0c0a6)
 
-New iterations of the robot from Onshape must be convert to urdf and sdf file formats using [onshape-to-robot](https://onshape-to-robot.readthedocs.io/en/latest/index.html) to enable visualization and simulation:
+New iterations of the robot from Onshape must be converted to urdf and sdf file formats using [onshape-to-robot](https://onshape-to-robot.readthedocs.io/en/latest/index.html) to enable visualization and simulation:
 
 ```
 cd robot/onshape_converts
