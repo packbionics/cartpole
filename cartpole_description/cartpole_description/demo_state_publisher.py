@@ -26,7 +26,7 @@ class DemoStatePublisher(Node):
 
         cart_inc = 0.01
         cart_inc_multiplier = 1.0
-        pole_inc = degree
+        pole_inc = degree * 2.5
 
         # message declarations
         odom_trans = TransformStamped()
@@ -43,6 +43,9 @@ class DemoStatePublisher(Node):
                 joint_state.header.stamp = now.to_msg()
                 joint_state.name = ['revolute_pole', 'slider_cart']
                 joint_state.position = [pole, cart]
+
+                # update transform
+                odom_trans.header.stamp = now.to_msg()
 
                 # send the joint state
                 self.joint_pub.publish(joint_state)

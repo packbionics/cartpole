@@ -16,7 +16,8 @@ setup(
         ('share/' + package_name, ['package.xml']),
         (os.path.join('share', package_name), glob('launch/*.py')),
         (os.path.join('share', package_name), glob('robot/urdf/*')),
-        (os.path.join('share', package_name), glob('rviz/*'))
+        (os.path.join('share', package_name), glob('rviz/*')),
+        (os.path.join('share', package_name), glob('meshes/*'))
     ],
     install_requires=['setuptools'],
     zip_safe=True,

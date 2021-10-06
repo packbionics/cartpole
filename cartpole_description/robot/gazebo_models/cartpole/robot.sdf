@@ -3,48 +3,48 @@
 <link name="rail">
     <frame name="rail_frame"><pose>0 0 0 0 -0 0</pose></frame>
     <visual name="rail_0_rail_visual">
-    <pose>0.498292 0.0949833 0.468696 0 -0 -2.77556e-16</pose>
-    <geometry>
-    <mesh><uri>model://cartpole/meshes/rail.stl</uri></mesh>
-    </geometry>
-    <material><ambient>0.615686 0.811765 0.929412 1</ambient><diffuse>0.615686 0.811765 0.929412 1</diffuse><specular>0.1 0.1 0.1 1</specular><emissive>0 0 0 0</emissive></material>
+        <pose>0.498292 0.0949833 0.468696 0 -0 -2.77556e-16</pose>
+        <geometry>
+        <mesh><uri>model://cartpole/meshes/rail.stl</uri></mesh>
+        </geometry>
+        <material><ambient>0.615686 0.811765 0.929412 1</ambient><diffuse>0.615686 0.811765 0.929412 1</diffuse><specular>0.1 0.1 0.1 1</specular><emissive>0 0 0 0</emissive></material>
     </visual>
     <collision name="rail_0_rail_visual">
-    <pose>0.498292 0.0949833 0.468696 0 -0 -2.77556e-16</pose>
-    <geometry>
-    <mesh><uri>model://cartpole/meshes/rail.stl</uri></mesh>
-    </geometry>
+        <pose>0.498292 0.0949833 0.468696 0 -0 -2.77556e-16</pose>
+        <geometry>
+        <mesh><uri>model://cartpole/meshes/rail.stl</uri></mesh>
+        </geometry>
     </collision>
     <visual name="rail_1_stand_visual">
-    <pose>1.09729 0.0949833 0.248696 0 -0 3.14159</pose>
-    <geometry>
-    <mesh><uri>model://cartpole/meshes/stand.stl</uri></mesh>
-    </geometry>
-    <material><ambient>0.815686 0.054902 0.0431373 1</ambient><diffuse>0.815686 0.054902 0.0431373 1</diffuse><specular>0.1 0.1 0.1 1</specular><emissive>0 0 0 0</emissive></material>
+        <pose>1.09729 0.0949833 0.248696 0 -0 3.14159</pose>
+        <geometry>
+        <mesh><uri>model://cartpole/meshes/stand.stl</uri></mesh>
+        </geometry>
+        <material><ambient>0.815686 0.054902 0.0431373 1</ambient><diffuse>0.815686 0.054902 0.0431373 1</diffuse><specular>0.1 0.1 0.1 1</specular><emissive>0 0 0 0</emissive></material>
     </visual>
     <collision name="rail_1_stand_visual">
-    <pose>1.09729 0.0949833 0.248696 0 -0 3.14159</pose>
-    <geometry>
-    <mesh><uri>model://cartpole/meshes/stand.stl</uri></mesh>
-    </geometry>
+        <pose>1.09729 0.0949833 0.248696 0 -0 3.14159</pose>
+        <geometry>
+        <mesh><uri>model://cartpole/meshes/stand.stl</uri></mesh>
+        </geometry>
     </collision>
     <visual name="rail_2_stand_visual">
-    <pose>-0.100708 0.0949833 0.248696 0 -0 -2.77556e-16</pose>
-    <geometry>
-    <mesh><uri>model://cartpole/meshes/stand.stl</uri></mesh>
-    </geometry>
-    <material><ambient>0.815686 0.054902 0.0431373 1</ambient><diffuse>0.815686 0.054902 0.0431373 1</diffuse><specular>0.1 0.1 0.1 1</specular><emissive>0 0 0 0</emissive></material>
+        <pose>-0.100708 0.0949833 0.248696 0 -0 -2.77556e-16</pose>
+        <geometry>
+        <mesh><uri>model://cartpole/meshes/stand.stl</uri></mesh>
+        </geometry>
+        <material><ambient>0.815686 0.054902 0.0431373 1</ambient><diffuse>0.815686 0.054902 0.0431373 1</diffuse><specular>0.1 0.1 0.1 1</specular><emissive>0 0 0 0</emissive></material>
     </visual>
     <collision name="rail_2_stand_visual">
-    <pose>-0.100708 0.0949833 0.248696 0 -0 -2.77556e-16</pose>
-    <geometry>
-    <mesh><uri>model://cartpole/meshes/stand.stl</uri></mesh>
-    </geometry>
+        <pose>-0.100708 0.0949833 0.248696 0 -0 -2.77556e-16</pose>
+        <geometry>
+        <mesh><uri>model://cartpole/meshes/stand.stl</uri></mesh>
+        </geometry>
     </collision>
     <inertial>
-    <pose frame="rail_frame">0.498292 0.0949833 0.24872 0 0 0</pose>
-    <mass>227.005</mass>
-    <inertia><ixx>5.48654</ixx><ixy>2.43677e-14</ixy><ixz>3.80451e-14</ixz><iyy>73.3331</iyy><iyz>-1.40516e-29</iyz><izz>69.3598</izz></inertia>
+        <pose frame="rail_frame">0.498292 0.0949833 0.24872 0 0 0</pose>
+        <mass>227.005</mass>
+        <inertia><ixx>5.48654</ixx><ixy>2.43677e-14</ixy><ixz>3.80451e-14</ixz><iyy>73.3331</iyy><iyz>-1.40516e-29</iyz><izz>69.3598</izz></inertia>
     </inertial>
 </link>
 
