@@ -1,0 +1,5 @@
+# Service used to stop the robot
+
+---
+bool success
+string message
