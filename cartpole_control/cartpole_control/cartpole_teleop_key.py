@@ -32,7 +32,7 @@ Useful links:
 
 Teleop:
     1. Generic teleop node example: 
-        https://github.com/rohbotics/ros2_teleop_keyboard
+        https://github.com/ros2/teleop_twist_keyboard
         
     2. Refer to cartpole_interfaces/msg for the message formats
 
