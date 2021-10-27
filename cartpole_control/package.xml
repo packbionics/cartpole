@@ -4,8 +4,11 @@
   <name>cartpole_control</name>
   <version>0.0.1</version>
   <description>Cartpole swingup + balancing controllers</description>
-  <maintainer email="jasonxie(at)live(dot)unc(dot)edu">jasonx</maintainer>
+  <maintainer email="jasonxie@live.unc.edu">jasonx</maintainer>
   <license>MIT</license>
+
+	<exec_depend>rclpy</exec_depend>
+	<exec_depend>cartpole_interfaces</exec_depend>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>

@@ -3,11 +3,13 @@ import sys
 import termios
 import tty
 
+if sys.platform == 'win32':
+    import msvcrt
+
 import rclpy
 from cartpole_interfaces.msg import Action
 from cartpole_interfaces.srv import SetPosition, Stop
 from rclpy.node import Node
-from rclpy.qos import qos_profile_default
 
 """
 cartpole_teleop_key
@@ -41,7 +43,8 @@ Services:
         https://docs.ros.org/en/foxy/Tutorials/Services/Understanding-ROS2-Services.html
 
     2. ROS2 services exampl: 
-        https://docs.ros.org/en/foxy/Tutorials/Writing-A-Simple-Py-Service-And-Client.html 
+        https://docs.ros.org/en/f
+        oxy/Tutorials/Writing-A-Simple-Py-Service-And-Client.html 
 
     3. Refer to cartpole_interfaces/srv for the service formats
 """
@@ -60,23 +63,125 @@ anything else: stop
 CTRL-C to quit
 """
 
+key_bindings = {'a': 0.1,
+                'd': -0.1}
+
+def get_key(settings):
+    if sys.platform == 'win32':
+        key = msvcrt.getwch()
+    else:
+        tty.setraw(sys.stdin.fileno())
+        key = sys.stdin.read(1)
+        termios.tcsetattr(sys.stdin, termios.TCSADRAIN, settings)
+    return key
+
+
+def get_terminal_settings():
+    if sys.platform == 'win32':
+        return None
+    return termios.tcgetattr(sys.stdin)
+
+
 class CartepoleTeleop(Node):
 
-  def __init__(self):
-    rclpy.init()
-    super().__init__('cartpole_teleop_key')
-                            
-    self.publisher_ = self.create_publisher(
-                        Action, 
-                        '/cartpole/action', 
-                        10)
- 
-    self.max_accel = 1.0
+    def __init__(self):
+        rclpy.init()
+        super().__init__('cartpole_teleop_key')
 
- 
+        self.topic = '/cartpole/action'
+        self.publisher_ = self.create_publisher(Action,
+                                                self.topic,
+                                                10)
+
+        # Clients to send the "Stop" and "Set Position" request
+        self.stop_robot_client_ = self.create_client(Stop, 'stop_robot')
+        self.set_position_client_ = self.create_client(SetPosition, 'set_position')
+
+        # Interfaces used by clients
+        self.stop_request = Stop.Request()
+        self.set_position_request = SetPosition.Request()
+
+        self.set_position_request.x = 0.0
+
+        #Used to notify of a response from a server
+        self.stop_request_future = 0
+        self.set_position_request_future = 0
+
+        # Initializes Action interface for publisher
+        self.msg = Action()
+
+        # Limits the value of acceleration
+        self.max_accel = 1.0
+        self.min_accel = -self.max_accel
+
+        self.delta_accel = 0.1
+        self.accel = 0.0
+
+    def publish_accel(self):
+        self.msg.x_dot2 = self.accel
+
+        self.publisher_.publish(self.msg)
+        self.get_logger().info('Publishing: "%s" to topic: "%s"' % (self.msg.x_dot2, self.topic))
+
+    def limit_accel(self):
+        if self.accel > self.max_accel:
+            self.accel = self.max_accel
+        elif self.accel < self.min_accel:
+            self.accel = self.min_accel
+
+    def send_stop_request(self):
+        self.stop_request_future = self.stop_robot_client_.call_async(self.stop_request)
+
+    def send_set_position_request(self):
+        self.set_position_request_future = self.set_position_client_.call_async(self.set_position_request)
+
+
+def check_for_service_response(node, future, msg):
+    if future.done():
+            try:
+                response = future.result()
+            except Exception as e:
+                node.get_logger().info(
+                    'Service call failed %r' % (e,))
+            else:
+                node.get_logger().info(msg)
+
+
 def main():
+    settings = get_terminal_settings()
     node = CartepoleTeleop()
-    rclpy.spin(node)
- 
+
+    print(msg)
+
+    while True: # Input loop
+        key = get_key(settings)
+        print(key)
+
+        if key in key_bindings:
+            node.accel += key_bindings[key]
+        elif key == '\x03':
+            break
+
+        node.limit_accel()
+        node.publish_accel()
+    
+    # Sends request to service
+    node.send_stop_request()
+    node.send_set_position_request()
+
+    while rclpy.ok(): # Waits for responses from service
+        rclpy.spin_once(node)
+
+        check_for_service_response(node, node.stop_request_future, 'Result of stop_robot')
+        check_for_service_response(node, node.set_position_request_future, 'Result of set_position')
+
+        if node.stop_request_future.done() and node.set_position_request_future.done():
+            break
+
+
+    node.destroy_node()
+    rclpy.shutdown()
+
+
 if __name__ == '__main__':
     main()
