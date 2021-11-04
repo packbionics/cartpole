@@ -20,7 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-        		'publisher = cartpole_control.cartpole_teleop_key:main',
+        		'cartpole_teleop_key = cartpole_control.cartpole_teleop_key:main',
+                'cartpole_test_server = cartpole_control.cartpole_test_server:main',
         ],
     },
 )

@@ -7,6 +7,7 @@ if sys.platform == 'win32':
     import msvcrt
 
 import rclpy
+from std_msgs.msg import Float64
 from cartpole_interfaces.msg import Action
 from cartpole_interfaces.srv import SetPosition, Stop
 from rclpy.node import Node
@@ -63,8 +64,8 @@ anything else: stop
 CTRL-C to quit
 """
 
-key_bindings = {'a': 0.1,
-                'd': -0.1}
+key_bindings = {'a': 1.0,
+                'd': -1.0}
 
 def get_key(settings):
     if sys.platform == 'win32':
@@ -88,14 +89,18 @@ class CartepoleTeleop(Node):
         rclpy.init()
         super().__init__('cartpole_teleop_key')
 
-        self.topic = '/cartpole/action'
-        self.publisher_ = self.create_publisher(Action,
+        self.topic = '/slider_cart_velocity_controller/command'
+
+        self.stop_service_name = '/cartpole/stop'
+        self.set_position_service_name = '/cartpole/set_position'
+
+        self.publisher_ = self.create_publisher(Float64,
                                                 self.topic,
                                                 10)
 
         # Clients to send the "Stop" and "Set Position" request
-        self.stop_robot_client_ = self.create_client(Stop, 'stop_robot')
-        self.set_position_client_ = self.create_client(SetPosition, 'set_position')
+        self.stop_robot_client_ = self.create_client(Stop, self.stop_service_name)
+        self.set_position_client_ = self.create_client(SetPosition, self.set_position_service_name)
 
         # Interfaces used by clients
         self.stop_request = Stop.Request()
@@ -108,7 +113,7 @@ class CartepoleTeleop(Node):
         self.set_position_request_future = 0
 
         # Initializes Action interface for publisher
-        self.msg = Action()
+        self.msg = Float64()
 
         # Limits the value of acceleration
         self.max_accel = 1.0
@@ -118,10 +123,10 @@ class CartepoleTeleop(Node):
         self.accel = 0.0
 
     def publish_accel(self):
-        self.msg.x_dot2 = self.accel
+        self.msg.data = self.accel
 
         self.publisher_.publish(self.msg)
-        self.get_logger().info('Publishing: "%s" to topic: "%s"' % (self.msg.x_dot2, self.topic))
+        self.get_logger().info('Publishing: "%s" to topic: "%s"' % (self.msg.data, self.topic))
 
     def limit_accel(self):
         if self.accel > self.max_accel:
@@ -158,7 +163,7 @@ def main():
         print(key)
 
         if key in key_bindings:
-            node.accel += key_bindings[key]
+            node.accel = key_bindings[key]
         elif key == '\x03':
             break
 
@@ -169,14 +174,14 @@ def main():
     node.send_stop_request()
     node.send_set_position_request()
 
-    while rclpy.ok(): # Waits for responses from service
-        rclpy.spin_once(node)
+    # while rclpy.ok(): # Waits for responses from service
+    #     rclpy.spin_once(node)
 
-        check_for_service_response(node, node.stop_request_future, 'Result of stop_robot')
-        check_for_service_response(node, node.set_position_request_future, 'Result of set_position')
+    #     check_for_service_response(node, node.stop_request_future, 'Result of stop_robot')
+    #     check_for_service_response(node, node.set_position_request_future, 'Result of set_position')
 
-        if node.stop_request_future.done() and node.set_position_request_future.done():
-            break
+    #     if node.stop_request_future.done() and node.set_position_request_future.done():
+    #         break
 
 
     node.destroy_node()
