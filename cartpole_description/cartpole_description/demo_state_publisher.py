@@ -1,15 +1,9 @@
-import time
 from math import pi
-
-import pybullet as p
-import pybullet_data
 import rclpy
-
 from rclpy.node import Node
 from rclpy.qos import QoSProfile
 from sensor_msgs.msg import JointState
 from tf2_ros import TransformBroadcaster, TransformStamped
-
 
 class DemoStatePublisher(Node):
 
@@ -39,26 +33,6 @@ class DemoStatePublisher(Node):
         odom_trans.header.frame_id = 'odom'
         odom_trans.child_frame_id = 'rail'
         joint_state = JointState()
-
-
-
-        physicsClient = p.connect(p.GUI)#or p.DIRECT for non-graphical version
-        p.setAdditionalSearchPath(pybullet_data.getDataPath()) #optionally
-        p.setGravity(0,0,-10)
-        planeId = p.loadURDF("plane.urdf")
-        startPos = [0,0,1]
-        startOrientation = p.getQuaternionFromEuler([0,0,0])
-        boxId = p.loadURDF("r2d2.urdf",startPos, startOrientation)
-        #set the center of mass frame (loadURDF sets base link frame) startPos/Ornp.resetBasePositionAndOrientation(boxId, startPos, startOrientation)
-        for i in range (10000):
-            p.stepSimulation()
-            time.sleep(1./240.)
-        print('hello')  
-        cubePos, *cubeOrn = p.getBasePositionAndOrientation(boxId)
-        print(cubePos,cubeOrn)
-        p.disconnect()
-
-
 
         try:
             while rclpy.ok():
@@ -95,7 +69,6 @@ class DemoStatePublisher(Node):
 
 def main():
     node = DemoStatePublisher()
-    rclpy.spin(node)
 
 if __name__ == '__main__':
     main()

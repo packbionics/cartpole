@@ -18,13 +18,12 @@ from queue import Queue
 """
 cartpole_teleop_key
 
-Publishes keyboard commands as cartpole/action message
+Publishes desired position, velocity, or effort to topics
 Additionally, implement a client and sends requests when appropriate
 
 Subscribes to:
 
-Publishes to:
-    cartpole/action [cartpole_interfaces/msg/Action]             - Desired effort of the cart
+Publishs: /cartpole/acc_d [Float64]             - Desired acceleration of the cart
 
 Sends requests:
     cartpole/stop [cartpole_interfaces/srv/Stop]                 - Stops robot
@@ -93,17 +92,17 @@ class CartpoleTeleop(Node):
         super().__init__('cartpole_teleop_key')
 
         self.effort_topic = '/slider_cart_effort_controller/command'
-        self.velocity_topic = '/slider_cart_velocity_controller/command'
-        self.position_topic = '/slider_cart_position_controller/command'
+        self.velocity_topic = '/cartpole/vel_d'
+        self.position_topic = '/cartpole/acc_d'
 
         self.stop_service_name = '/cartpole/stop'
         self.set_position_service_name = '/cartpole/set_position'
 
-        self._effort_publisher = self.create_publisher(Float64,
+        self._effort_publisher = self.create_publisher(Action,
                                                 self.effort_topic,
                                                 10)
 
-        self._velocity_publisher = self.create_publisher(Float64,
+        self._velocity_publisher = self.create_publisher(Action,
                                                 self.velocity_topic,
                                                 10)
 
@@ -139,19 +138,16 @@ class CartpoleTeleop(Node):
 
     def publish_effort(self):
         self.msg.data = self.effort
-
         self._effort_publisher.publish(self.msg)
         self.get_logger().info('Publishing: "%s" to topic: "%s"\n' % (self.msg.data, self.effort_topic))
 
     def publish_velocity(self):
         self.msg.data = self.velocity
         self._velocity_publisher.publish(self.msg)
-        self.get_logger().info('Publishing: "%s" to topic: "%s"\n' % (self.msg.data, self.velocity_topic))
 
     def publish_position(self):
         self.msg.data = self.position
         self._position_publisher.publish(self.msg)
-        self.get_logger().info('Publishing: "%s" to topic: "%s"\n' % (self.msg.data, self.position_topic))
 
     def limit_effort(self):
         if self.effort > self.max_effort:
