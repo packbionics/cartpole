@@ -188,7 +188,7 @@ class CartPoleEnergyShapingController(Node, CartPoleSwingUpController):
     def __init__(self, gravity=9.81, 
                 mass_cart=1, 
                 mass_pole=1, 
-                length_pole=0.5, 
+                length_pole=0.22, 
                 k_lqr=np.array([-4.47,80,-6,10.45]),
                 k_e=2,
                 k_x=[5,5]):
@@ -196,7 +196,20 @@ class CartPoleEnergyShapingController(Node, CartPoleSwingUpController):
         rclpy.init()
         Node.__init__(self, 'cartpole_energy_shaping_controller')
 
+        self.state_time = 0
+
+        self.k_p = 1.0
+        self.k_d = 0.0
+
+        self.prev_state = np.zeros((4,1))
+        self.prev_error = 0
+        self.prev_state_time = 0
+
+        self.position_topic = '/slider_cart_position_controller/command'
+        self.velocity_topic = '/slider_cart_velocity_controller/command'
         self.effort_topic = '/slider_cart_effort_controller/command'
+
+
         self.publisher = Node.create_publisher(self, Float64,
                                                self.effort_topic,
                                                10)
@@ -222,18 +235,58 @@ class CartPoleEnergyShapingController(Node, CartPoleSwingUpController):
 
         return super().unpack_parameters() + (k_e, k_x)
 
-    def publish_effort(self):
-        effort = Float64()
-        effort.data = float(self.swingup())
+    def publish_vel(self):
+        vel_control = Float64()
 
-        Node.get_logger(self).info('Pushing effort value: %s' % effort.data)
-        self.publisher.publish(effort)
+        accel_d = float(self.swingup())
+
+        accel = self.estimate_acceleration(self.state[1], 
+                                   self.prev_state[1],
+                                   self.state_time,
+                                   self.prev_state_time)
+
+        signal, self.prev_error = self.pd_controller(self.k_p, self.k_d, accel_d, accel, self.prev_error)
+        vel_control.data = accel_d
+
+        Node.get_logger(self).info('Pushing effort value: %s' % vel_control.data)
+        self.publisher.publish(vel_control)
+
+    def estimate_acceleration(self, vel, prev_vel, time, prev_time):
+        if time - prev_time == 0:
+            return 0.0
+
+        acceleration = float(vel - prev_vel) / float(time - prev_time)
+        acceleration *= 10.0**9
+
+        return acceleration
 
     def state_estimate_callback(self, msg):
-        self.state[0] = msg.position[0]
-        self.state[1] = msg.velocity[0]
-        self.state[2] = msg.position[1]
-        self.state[3] = msg.velocity[1]
+        self.prev_state[0] = self.state[0]
+        self.prev_state[1] = self.state[1]
+        self.prev_state[2] = self.state[2]
+        self.prev_state[3] = self.state[3]
+
+        self.prev_state_time = self.state_time
+
+        self.state[0] = msg.position[1]
+        self.state[1] = msg.velocity[1]
+        self.state[2] = msg.position[0]
+        self.state[3] = msg.velocity[0]
+
+        self.state_time = msg.header.stamp.nanosec
+
+    def pd_controller(self, k_p, k_d, accel_d, accel, prev_error):
+        if self.state_time - self.prev_state_time == 0:
+            return 0.0, 0.0
+
+        error = accel_d - accel
+
+        error_dot = (error - prev_error) / (self.state_time - self.prev_state_time)
+        error_dot *= 10.0**9
+
+        signal = k_p*error + k_d*error_dot
+
+        return signal, error
 
     def energy(self):
         """
