@@ -1,8 +1,8 @@
+import Math
+import numpy as np
 import rclpy
 from cartpole_interfaces.msg import Action, State
 from rclpy.node import Node
-import numpy as np
-import Math
 
 """
 energy_shaping_controller
@@ -81,7 +81,7 @@ class EnergyShapingController(Node):
     def state_estimate_callback(self, msg):
         self.state[0] = msg.x
         self.state[1] = msg.x_dot
-        self.state[2] = msg.theta
+        self.state[2] = msg.theta + 2*Math.pi
         self.state[3] = msg.theta_dot
 
     def get_action(self):
