@@ -197,10 +197,6 @@ class CartPoleEnergyShapingController(Node, CartPoleSwingUpController):
         Node.__init__(self, 'cartpole_energy_shaping_controller')
 
         self.loop_rate = 240.0
-        self.state_time = 0.0
-
-        self.prev_state = np.zeros((4,1))
-        self.prev_state_time = 0.0
 
         self.position_topic = '/slider_cart_position_controller/command'
         self.velocity_topic = '/slider_cart_velocity_controller/command'
@@ -218,8 +214,6 @@ class CartPoleEnergyShapingController(Node, CartPoleSwingUpController):
                                                  10)
 
         self.publish_callback = Node.create_timer(self, 1.0/self.loop_rate, self.publish_accel)
-        self.print_angular_prog_callback = Node.create_timer(self, 0.05, self.print_angular_prog)
-
 
         CartPoleSwingUpController.__init__(self, gravity, 
                 mass_cart, 
@@ -236,9 +230,6 @@ class CartPoleEnergyShapingController(Node, CartPoleSwingUpController):
 
         return super().unpack_parameters() + (k_e, k_x)
 
-    def print_angular_prog(self):
-        Node.get_logger(self).info('Distance from goal: %s' % self.theta_distance(self.state[2], math.pi))
-
     def publish_accel(self):
         accel_d = 0.0
         accel_d = float(self.get_action())
@@ -249,42 +240,13 @@ class CartPoleEnergyShapingController(Node, CartPoleSwingUpController):
         Node.get_logger(self).info('Pushing effort value: %s' % accel_control.data)
         self.publisher.publish(accel_control)
 
-    def estimate_acceleration(self, vel, prev_vel, time, prev_time):
-        if time - prev_time == 0.0:
-            return 0.0
-
-        acceleration = float(vel - prev_vel) / float(time - prev_time)
-        return acceleration
-
     def state_estimate_callback(self, msg):
-        
-        # Record previous state before updating
-        self.prev_state[0] = self.state[0]
-        self.prev_state[1] = self.state[1]
-        self.prev_state[2] = self.state[2]
-        self.prev_state[3] = self.state[3]
-
-        self.prev_state_time = self.state_time
 
         # Update state from /joint_states topic
         self.state[0] = msg.position[1]
         self.state[1] = msg.velocity[1]
         self.state[2] = msg.position[0]
         self.state[3] = -msg.velocity[0]
-
-        self.state_time = float(msg.header.stamp.nanosec) # timestamp in nanoseconds
-        self.state_time /= 10.0**9.0 # convert from nanoseconds to seconds
-
-    def pd_controller(self, k_p, k_d, accel_d, accel, prev_error):
-        if self.state_time - self.prev_state_time == 0:
-            return 0.0, 0.0
-
-        error = accel_d - accel
-
-        error_dot = (error - prev_error) / (self.state_time - self.prev_state_time)
-        signal = k_p*error + k_d*error_dot
-
-        return signal, error
 
     def energy(self):
         """
