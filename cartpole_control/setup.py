@@ -22,7 +22,7 @@ setup(
         'console_scripts': [
         	'cartpole_teleop_key = cartpole_control.cartpole_teleop_key:main',
             'cartpole_test_server = cartpole_control.cartpole_test_server:main',
-            'run_cart_pole = cartpole_control.run_cart_pole:main'
+            'cartpole_swingup = cartpole_control.cartpole_swingup:main'
         ],
     },
 )

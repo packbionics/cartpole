@@ -1,5 +1,7 @@
 import rclpy
-from cartpole_control.cart_pole_control import CartPoleEnergyShapingController
+
+from cartpole_control.controllers import CartPoleEnergyShapingController
+
 
 def main():
     controller = CartPoleEnergyShapingController()

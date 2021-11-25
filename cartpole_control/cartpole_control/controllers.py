@@ -32,8 +32,8 @@ class CartPoleSwingUpController:
     def __init__(self, gravity=9.81, 
                 mass_cart=1, 
                 mass_pole=1, 
-                length_pole=0.5, 
-                k_lqr=np.array([-4.47,80,-6,10.45])):
+                length_pole=0.22, 
+                k_lqr=np.array([-2.2361, 90.2449, -3.6869, 5.4608])):
         self.state = np.zeros((4,1))
         self.k_lqr = k_lqr
         self.gravity = gravity
@@ -57,19 +57,28 @@ class CartPoleSwingUpController:
                 self.length_pole,
                 self.k_lqr)
 
-    def state_estimate_callback(self, state):
-        state = self.state_modifier(state)
-        self.state[0] = state[0]
-        self.state[1] = state[1]
-        self.state[2] = state[2]        
-        self.state[3] = state[3]
-        return state
+    def state_estimate_callback(self, msg):
+        self.state[0] = msg.position[1]
+        self.state[1] = msg.velocity[1]
+        self.state[2] = msg.position[0]
+        self.state[3] = msg.velocity[0]
+        
+        self.state[0] = -self.state[0]
+        self.state[1] = -self.state[1]
+        self.state[2] = self.state[2]        
+        self.state[3] = self.state[3]
+        
+        print('x: {}'.format(self.state[0]))
+        print('theta_diff: {}'.format(self.theta_distance(self.state[2],math.pi)))
+        print('x_dot: {}'.format(self.state[1]))
+        print('theta_dot: {}'.format(self.state[3]))
+        return self.state
 
     def get_action(self):
         if (abs(self.theta_distance(self.state[2],math.pi)) < .3):
-            return self.upright_lqr()
+            return float(self.upright_lqr())
         else:
-            return self.swingup()
+            return float(self.swingup())
 
     def theta_distance(self, theta, target):
         """
@@ -90,24 +99,18 @@ class CartPoleSwingUpController:
         theta_dot = self.state[3]
 
         theta_diff = self.theta_distance(theta,math.pi)
+
         X = np.array([x, theta_diff, x_dot, theta_dot])
         f = np.dot(k_lqr,X)
-        return -f 
+
+        return f 
 
 
 class CartPoleMPCController(CartPoleSwingUpController):
 
-    def __init__(self, gravity=9.81, 
-                mass_cart=1, 
-                mass_pole=1, 
-                length_pole=0.5, 
-                k_lqr=np.array([-4.47,80,-6,-10.45])):
+    def __init__(self):
 
-        super().__init__(gravity, 
-                mass_cart, 
-                mass_pole, 
-                length_pole,
-                k_lqr)
+        super().__init__()
 
         self.m = gk(remote=False)
 
@@ -185,41 +188,30 @@ class CartPoleMPCController(CartPoleSwingUpController):
 
 class CartPoleEnergyShapingController(Node, CartPoleSwingUpController): 
 
-    def __init__(self, gravity=9.81, 
-                mass_cart=1, 
-                mass_pole=1, 
-                length_pole=0.11, 
-                k_lqr=np.array([-4.47,-80,-6,10.45]),
-                k_e=2,
-                k_x=[5,5]):
+    def __init__(self, k_e=2, k_x=[5,5]):
 
         rclpy.init()
         Node.__init__(self, 'cartpole_energy_shaping_controller')
 
         self.loop_rate = 240.0
-
         self.position_topic = '/slider_cart_position_controller/command'
         self.velocity_topic = '/slider_cart_velocity_controller/command'
         self.effort_topic = '/slider_cart_effort_controller/command'
 
 
-        self.publisher = Node.create_publisher(self, Float64,
+        self.publisher = self.create_publisher(self, Float64,
                                                self.effort_topic,
                                                10)
 
         self.joint_state_topic = '/joint_states'               
-        self.subscriber = Node.create_subscription(self, JointState,
-                                                 self.joint_state_topic,
-                                                 self.state_estimate_callback,
-                                                 10)
+        self.subscriber = self.create_subscription(self, JointState,
+                                                   self.joint_state_topic,
+                                                   self.state_estimate_callback,
+                                                   10)
 
-        self.publish_callback = Node.create_timer(self, 1.0/self.loop_rate, self.publish_accel)
+        self.timer = self.create_timer(1.0/self.loop_rate, self.control_callback)
 
-        CartPoleSwingUpController.__init__(self, gravity, 
-                mass_cart, 
-                mass_pole, 
-                length_pole,
-                k_lqr)
+        CartPoleSwingUpController.__init__(self)
 
         self.k_e = k_e
         self.k_x = k_x
@@ -230,23 +222,11 @@ class CartPoleEnergyShapingController(Node, CartPoleSwingUpController):
 
         return super().unpack_parameters() + (k_e, k_x)
 
-    def publish_accel(self):
-        accel_d = 0.0
+    def control_callback(self):
+        effort = Float64()
         accel_d = float(self.get_action())
-
-        accel_control = Float64()
-        accel_control.data = accel_d
-
-        Node.get_logger(self).info('Pushing effort value: %s' % accel_control.data)
-        self.publisher.publish(accel_control)
-
-    def state_estimate_callback(self, msg):
-
-        # Update state from /joint_states topic
-        self.state[0] = msg.position[1]
-        self.state[1] = msg.velocity[1]
-        self.state[2] = msg.position[0]
-        self.state[3] = -msg.velocity[0]
+        effort.data = accel_d
+        self.publisher.publish(effort)
 
     def energy(self):
         """
@@ -290,12 +270,13 @@ class CartPoleEnergyShapingController(Node, CartPoleSwingUpController):
 
         c = math.cos(theta)
         s = math.sin(theta)
-        t = math.tan(theta)
 
         acceleration = k_e * theta_dot * c * Ediff - k_x[0] * x - k_x[1]*x_dot
 
         f = ((mass_pole+mass_cart)*acceleration + 
                 mass_pole*(-acceleration*c-gravity*s)*c - 
                 mass_pole*length_pole*theta_dot**2*s)
-        return acceleration
+
+        self.get_logger().info('f: {}'.format(f))
+        return -f
 
