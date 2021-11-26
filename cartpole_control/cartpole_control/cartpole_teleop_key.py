@@ -30,50 +30,26 @@ Sends requests:
     cartpole/stop [cartpole_interfaces/srv/Stop]                 - Stops robot
     cartpole/set_position [cartpole_interfaces/srv/SetPosition]  - Sets absolution position of cart
 """
- 
-"""
-TODO: Implement teleop and services
-
-Useful links:
-
-Teleop:
-    1. Generic teleop node example: 
-        https://github.com/rohbotics/ros2_teleop_keyboard
-        
-    2. Refer to cartpole_interfaces/msg for the message formats
-
-Services:
-    1. ROS2 services overview:
-        https://docs.ros.org/en/foxy/Tutorials/Services/Understanding-ROS2-Services.html
-
-    2. ROS2 services exampl: 
-        https://docs.ros.org/en/f
-        oxy/Tutorials/Writing-A-Simple-Py-Service-And-Client.html 
-
-    3. Refer to cartpole_interfaces/srv for the service formats
-"""
 
 msg = """
-Cartpole Teleoperation
-----------------------
-Moving around:
-    a   d
+        Cartpole Teleoperation
+        ----------------------
+        Moving around:
+            a   d
 
-z/x : Increase/Decrease max force
-c   : Recenter cart
+        z/x : Increase/Decrease max force
+        c   : Recenter cart
 
-anything else: stop
+        anything else: stop
 
-CTRL-C to quit
-"""
+        CTRL-C to quit
+    """
 
-effort_key_bindings = {'a': 1.0,
-                'd': -1.0}
+effort_key_bindings = {'a': 1.0, 'd': -1.0}
 
 effort_multiplier = 1.0
 
-effort_delta_key_bindings = {'z': 1.0,
-                'x': -1.0}
+effort_delta_key_bindings = {'z': 1.0, 'x': -1.0}
 
 k_queue = Queue()
 
@@ -196,7 +172,6 @@ def pub_cmd(node):
                 if key in effort_key_bindings:
                     node.effort = node.effort_multiplier * effort_key_bindings[key]
                 elif key in effort_delta_key_bindings:
-                    node.publish_velocity()
                     node.effort = 0.0
                     node.effort_multiplier += node.delta_effort * effort_delta_key_bindings[key]
                     continue

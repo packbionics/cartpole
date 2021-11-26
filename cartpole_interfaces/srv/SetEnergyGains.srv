@@ -1,0 +1,7 @@
+# Service used to adjust energy gains
+
+float32 k_x
+float32 k_x_dot
+float32 k_e
+---
+int32 result

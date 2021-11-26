@@ -2,3 +2,4 @@
 
 float32 x
 ---
+int32 result
