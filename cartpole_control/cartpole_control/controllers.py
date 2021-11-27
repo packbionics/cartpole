@@ -17,6 +17,7 @@ from gekko import GEKKO as gk
 from rclpy.node import Node
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Float64
+from cartpole_interfaces.srv import SetEnergyGains, SetLQRGains
 
 
 """
@@ -24,20 +25,32 @@ CartPoleSwingUpController
 
 Base class for controllers
 """
-class CartPoleSwingUpController:
+class CartPoleSwingUpController(Node):
 
-    def __init__(self, gravity=9.81, 
+    def __init__(self, node_name, gravity=9.81, 
                 mass_cart=1, 
                 mass_pole=1, 
                 length_pole=0.22, 
                 k_lqr=np.array([-3.2361, 90.2449, -3.6869, 5.4608])):
+        
+        super().__init__(node_name)
         self.state = np.zeros((4,1))
         self.k_lqr = k_lqr
         self.gravity = gravity
         self.mass_cart = mass_cart
         self.mass_pole = mass_pole
         self.length_pole = length_pole
+        
+        self.k_lqr_service = self.create_service(SetLQRGains, 'set_lqr_gains', self.lqr_gains_callback)
 
+    def lqr_gains_callback(self, request, response):
+        self.k_lqr = np.array([request.k_x, 
+                               request.k_theta, 
+                               request.k_x_dot, 
+                               request.k_theta_dot])
+        self.get_logger().info('LQR gains set to: {}'.format(self.k_lqr))
+        response.result = 1
+        
     def unpack_parameters(self):
         return (self.gravity,
                 self.mass_pole,
@@ -63,10 +76,6 @@ class CartPoleSwingUpController:
         self.state[2] = self.state[2]        
         self.state[3] = self.state[3]
         
-        #print('x: {}'.format(self.state[0]))
-        #print('theta_diff: {}'.format(self.theta_distance(self.state[2],math.pi)))
-        #print('x_dot: {}'.format(self.state[1]))
-        #print('theta_dot: {}'.format(self.state[3]))
         return self.state
     
     """
@@ -130,17 +139,16 @@ CartPoleMPCController
 
 Implements MPC for cartpole using Gekko
 """
-class CartPoleMPCController(Node, CartPoleSwingUpController):
+class CartPoleMPCController(CartPoleSwingUpController):
 
     def __init__(self):
-
-        Node.__init__(self, 'cartpole_mpc_controller')
+        
+        super().__init__('cartpole_mpc_controller')
 
         self.loop_rate = 10.0
         self.position_topic = '/slider_cart_position_controller/command'
         self.velocity_topic = '/slider_cart_velocity_controller/command'
         self.effort_topic = '/slider_cart_effort_controller/command'
-
 
         self.publisher = self.create_publisher(Float64,
                                                self.effort_topic,
@@ -153,8 +161,6 @@ class CartPoleMPCController(Node, CartPoleSwingUpController):
                                                    10)
 
         self.timer = self.create_timer(1.0/self.loop_rate, self.control_callback)
-
-        CartPoleSwingUpController.__init__(self)
 
         self.m = gk(remote=False)
 
@@ -260,12 +266,12 @@ k_e: Energy gain, determines how hard the cart tries to swing pole
 k_x: [Position, Linear velocity] gains, higher values will regularize cart
         and prevent excessive swinging
 """
-class CartPoleEnergyShapingController(Node, CartPoleSwingUpController): 
+class CartPoleEnergyShapingController(CartPoleSwingUpController): 
 
     def __init__(self, k_e=14, k_x=[1,2]):
-
-        Node.__init__(self, 'cartpole_energy_shaping_controller')
-
+        
+        super().__init__('cartpole_energy_shaping_controller')
+        
         self.loop_rate = 40.0
         self.position_topic = '/slider_cart_position_controller/command'
         self.velocity_topic = '/slider_cart_velocity_controller/command'
@@ -284,10 +290,18 @@ class CartPoleEnergyShapingController(Node, CartPoleSwingUpController):
 
         self.timer = self.create_timer(1.0/self.loop_rate, self.control_callback)
 
-        CartPoleSwingUpController.__init__(self)
-
         self.k_e = k_e
         self.k_x = k_x
+        
+        self.k_e_service = self.create_service(SetEnergyGains, 'set_energy_gains', self.energy_gains_callback)
+
+    def energy_gains_callback(self, request, response):
+        self.k_e = request.k_e
+        self.k_x = [request.k_x, request.k_x_dot]
+        self.get_logger().info('Energy gain set to: {}'.format(self.k_e))
+        self.get_logger().info('Position gain set to: {}'.format(self.k_x[0]))
+        self.get_logger().info('Velocity gain set to: {}'.format(self.k_x[1]))
+        response.result = 1
 
     def unpack_parameters(self):
         k_e = self.k_e

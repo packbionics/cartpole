@@ -9,7 +9,11 @@ class CartPole(Node):
 
     def __init__(self):
         super().__init__('minimal_client_async')
-        self.cli = self.create_client(AddTwoInts, 'add_two_ints')
+        self.energy_gain_client = self.create_client(SetEnergyGains, 'set_energy_gains')
+        self.lqr_gain_client = self.create_client(SetLQRGains, 'set_lqr_gains')
+        self.set_position_client = self.create_client(SetPosition, 'set_position')
+        self.stop_client = self.create_client(Stop, 'stop')
+        
         while not self.cli.wait_for_service(timeout_sec=1.0):
             self.get_logger().info('service not available, waiting again...')
         self.req = AddTwoInts.Request()

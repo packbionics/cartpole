@@ -25,6 +25,8 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 	"msg/State.msg"
 	"srv/SetPosition.srv"
 	"srv/Stop.srv"
+  "srv/SetEnergyGains.srv"
+  "srv/SetLQRGains.srv"
 )
 
 if(BUILD_TESTING)

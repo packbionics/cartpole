@@ -5,8 +5,8 @@ from cartpole_control.controllers import CartPoleMPCController
 
 def main():
     rclpy.init()
-    #controller = CartPoleEnergyShapingController()
-    controller = CartPoleMPCController()
+    controller = CartPoleEnergyShapingController()
+    #controller = CartPoleMPCController()
     rclpy.spin(controller)
 
     controller.destroy_node()

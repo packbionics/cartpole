@@ -43,7 +43,7 @@ msg = """
         anything else: stop
 
         CTRL-C to quit
-    """
+      """
 
 effort_key_bindings = {'a': 1.0, 'd': -1.0}
 
