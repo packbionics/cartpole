@@ -66,15 +66,10 @@ class CartPoleSwingUpController(Node):
         we need to account for this.
     """
     def state_estimate_callback(self, msg):
-        self.state[0] = msg.position[1]
-        self.state[1] = msg.velocity[1]
+        self.state[0] = -msg.position[1]
+        self.state[1] = -msg.velocity[1]
         self.state[2] = msg.position[0]
         self.state[3] = msg.velocity[0]
-        
-        self.state[0] = -self.state[0]
-        self.state[1] = -self.state[1]
-        self.state[2] = self.state[2]        
-        self.state[3] = self.state[3]
         
         return self.state
     
@@ -125,7 +120,8 @@ class CartPoleSwingUpController(Node):
 
         theta_diff = self.theta_distance(theta,math.pi)
 
-        X = np.array([x, theta_diff, x_dot, theta_dot])
+        X = np.array([x[0], theta_diff, x_dot[0], theta_dot[0
+                                                            ]])
         f = np.dot(k_lqr,X)
 
         return f 
@@ -301,7 +297,8 @@ class CartPoleEnergyShapingController(CartPoleSwingUpController):
         self.get_logger().info('Energy gain set to: {}'.format(self.k_e))
         self.get_logger().info('Position gain set to: {}'.format(self.k_x[0]))
         self.get_logger().info('Velocity gain set to: {}'.format(self.k_x[1]))
-        response.result = 1
+        response.result = int(1)
+        # TODO Fix response typeerror
 
     def unpack_parameters(self):
         k_e = self.k_e
@@ -362,6 +359,5 @@ class CartPoleEnergyShapingController(CartPoleSwingUpController):
                 mass_pole*(-acceleration*c-gravity*s)*c - 
                 mass_pole*length_pole*theta_dot**2*s)
 
-        self.get_logger().info('f: {}'.format(f))
         return -f
 
