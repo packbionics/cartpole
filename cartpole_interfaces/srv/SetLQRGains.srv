@@ -1,0 +1,8 @@
+# Service used to adjust LQR gains
+
+float32 k_x
+float32 k_theta
+float32 k_x_dot
+float32 k_theta_dot
+---
+int32 result

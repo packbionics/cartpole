@@ -1,6 +1,6 @@
 from setuptools import setup
 
-package_name = 'cartpole'
+package_name = 'cartpole_control'
 
 setup(
     name=package_name,
@@ -14,13 +14,15 @@ setup(
     install_requires=['setuptools'],
     zip_safe=True,
     maintainer='jasonx',
-    maintainer_email='59701038+JChunX@users.noreply.github.com',
-    description='Main package for cartpole',
+    maintainer_email='jasonxie(at)live(dot)unc(dot)edu',
+    description='Cartpole swingup + balancing controllers',
     license='MIT',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'cartpole_main = cartpole.cartpole_main:main',
+        	'cartpole_teleop_key = cartpole_control.cartpole_teleop_key:main',
+            'cartpole_test_server = cartpole_control.cartpole_test_server:main',
+            'cartpole_swingup = cartpole_control.cartpole_swingup:main'
         ],
     },
 )

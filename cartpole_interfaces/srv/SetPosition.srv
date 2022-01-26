@@ -1,0 +1,5 @@
+# Service used to set the absolute position of the cart
+
+float32 x
+---
+int32 result
